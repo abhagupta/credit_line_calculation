@@ -7,12 +7,10 @@ var constants = require('./constants');
 var utils = require('./utils');
 
 module.exports = {
-
     calculateCreditOutPut: function (file, callback) {
-
         utils.readInputFileAndValidate(file, function (err, data) {
             if (err) {
-               // throw Error(err);
+                throw Error(err);
             } else {
                 if (!data.result) {
                     callback(null, {

@@ -11,7 +11,7 @@ module.exports  = {
     readInputFileAndValidate : function(file, callback) {
 
         if (!fs.existsSync(file)) {
-            return callback(new Error("File not found"));
+            return callback(new Error("File " + file + " not found"));
         } 
 
         var array=[];
