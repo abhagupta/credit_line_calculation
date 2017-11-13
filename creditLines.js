@@ -32,20 +32,21 @@ module.exports = {
                 var instream = fs.createReadStream(file)
                     .pipe(es.split())
                     .pipe(es.mapSync(function (line) {
-                        var code = utils.getCode(line);
-                        var subCode = utils.getSubCode(line);
-                        var monthly_payment = utils.getPaymentAmount(line);
-                        var current_balance = utils.getCurrentBalance(line);
-                        var type = utils.identifyCreditCode(code);
+                        if(line.trim().length > 0){
+                            var code = utils.getCode(line);
+                            var subCode = utils.getSubCode(line);
+                            var monthly_payment = utils.getPaymentAmount(line);
+                            var current_balance = utils.getCurrentBalance(line);
+                            var type = utils.identifyCreditCode(code);
 
-                        var creditTradeLine = {
-                            type: type,
-                            monthly_payment: utils.convertToNonDecimalForHundred(monthly_payment),
-                            current_balance: utils.convertToNonDecimalForHundred(current_balance)
-                        };
+                            var creditTradeLine = {
+                                type: type,
+                                monthly_payment: utils.convertToNonDecimalForHundred(monthly_payment),
+                                current_balance: utils.convertToNonDecimalForHundred(current_balance)
+                            };
 
-                        tradeLines.push(creditTradeLine);
-
+                            tradeLines.push(creditTradeLine);
+                        }
                     }))
                     .on('error', function (err) {
                         console.log("Error thrown ", err);

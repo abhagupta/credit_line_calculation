@@ -20,11 +20,13 @@ module.exports  = {
         var instream = fs.createReadStream(file)
             .pipe(es.split())
             .pipe(es.mapSync(function(line){
-                array = line.split(' ');
-                if(!validateArray(array)){
-                    invalidLines.push(line);
-                    isValid = false;
-                }
+                if(line.trim().length > 0){
+                    array = line.trim().split(' ');
+                    if(!validateArray(array)){
+                        invalidLines.push(line);
+                        isValid = false;
+                    }
+               }
             }))
             .on('error', function(err) {
             callback(err);
@@ -79,14 +81,16 @@ module.exports  = {
         var instream = fs.createReadStream(file)
         .pipe(es.split())
         .pipe(es.mapSync(function(line){
-            var code = getCode(line);
-            var subCode = getSubCode(line);
-            var amount = getPaymentAmount(line);
-            
-            if (code === constants.CODE_MORTGAGE_LINE){
-                if(constants.SUBCODE_MORTGAGE_LINE.includes(subCode)){
-                    mortgageLines.push(line);
-                    mortgageAmount = mortgageAmount + parseFloat(amount);
+            if(line.trim().length > 0){
+                var code = getCode(line);
+                var subCode = getSubCode(line);
+                var amount = getPaymentAmount(line);
+                
+                if (code === constants.CODE_MORTGAGE_LINE){
+                    if(constants.SUBCODE_MORTGAGE_LINE.includes(subCode)){
+                        mortgageLines.push(line);
+                        mortgageAmount = mortgageAmount + parseFloat(amount);
+                    }
                 }
             }
         }))
@@ -112,12 +116,14 @@ module.exports  = {
         var instream = fs.createReadStream(file)
         .pipe(es.split())
         .pipe(es.mapSync(function(line){
-            var code = getCode(line);
-            var subCode = getSubCode(line);
-            var amount = getPaymentAmount(line);
-            if (code !== constants.CODE_MORTGAGE_LINE && code !== constants.CODE_STUDENT_LINE) {
-                nonHousingLines.push(line);
-                nonHousingAmount = nonHousingAmount + parseFloat(amount);
+            if(line.trim().length > 0){
+                var code = getCode(line);
+                var subCode = getSubCode(line);
+                var amount = getPaymentAmount(line);
+                if (code !== constants.CODE_MORTGAGE_LINE && code !== constants.CODE_STUDENT_LINE) {
+                    nonHousingLines.push(line);
+                    nonHousingAmount = nonHousingAmount + parseFloat(amount);
+                }
             }
             
         }))
@@ -140,13 +146,15 @@ module.exports  = {
         var instream = fs.createReadStream(file)
         .pipe(es.split())
         .pipe(es.mapSync(function(line){
-            var code = getCode(line);
-            var subCode = getSubCode(line);
-            var amount = getPaymentAmount(line);
-            if (code !== constants.CODE_MORTGAGE_LINE) {
-                nonMortgageLines.push(line);
-                nonMortGageAmount = nonMortGageAmount + parseFloat(amount);
-            }
+            if(line.trim().length > 0){
+                var code = getCode(line);
+                var subCode = getSubCode(line);
+                var amount = getPaymentAmount(line);
+                if (code !== constants.CODE_MORTGAGE_LINE) {
+                    nonMortgageLines.push(line);
+                    nonMortGageAmount = nonMortGageAmount + parseFloat(amount);
+                }
+           }
             
         }))
         .on('error', function(err) {
@@ -163,33 +171,6 @@ module.exports  = {
     convertToNonDecimalForHundred: function(amount){
         return amount * 100;
     }
-    
-    // extractStudentLoadCreditLines: function(file, callback){
-    //     var studentLoanLines = [];
-    //     var studentLoanAmount = 0.0;
-    //     var array=[];
-    //     var instream = fs.createReadStream(file)
-    //     .pipe(es.split())
-    //     .pipe(es.mapSync(function(line){
-    //         var code = getCode(line);
-    //         var subCode = getSubCode(line);
-    //         var amount = getPaymentAmount(line);
-    //         if (code !== constants.CODE_STUDENT_LINE) {
-    //             studentLoanLines.push(line);
-    //             studentLoanAmount = studentLoanAmount + parseFloat(amount.substring(1));
-    //         }
-            
-    //     }))
-    //     .on('error', function(err) {
-    //       callback(err);
-    //     })
-    //     .on('end', function(){
-    //         callback(null, {
-    //             lines: studentLoanLines,
-    //             amount: studentLoanAmount
-    //         });
-    //     });
-    // }
 
 }
 

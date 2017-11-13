@@ -1,9 +1,9 @@
 var creditLines = require('./creditLines');
 var path = require('path');
 
-process.on('uncaughtException', function (err) {
-    console.log('Caught exception: ' + err);
-});
+// process.on('uncaughtException', function (err) {
+//     console.log('Caught exception: ' + err);
+// });
 
 creditLines.calculateCreditOutPut(path.resolve(__dirname, "input/input.txt"), function(err, result){
  if(err){
